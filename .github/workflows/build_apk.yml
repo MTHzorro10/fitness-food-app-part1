@@ -1,43 +1,29 @@
-name: Build APK
+name: Fitness Food APK
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
+    tags: [ "*" ]
 
 jobs:
-  build:
+  publish:
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3  # Perbarui ke v3
+    - uses: actions/checkout@v3
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
 
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v4  # Perbarui ke v4
-        with:
-          python-version: 3.9
-
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y python3-pip build-essential git zlib1g-dev \
-                              libncurses5-dev libgdbm-dev libnss3-dev \
-                              libssl-dev libreadline-dev libffi-dev libsqlite3-dev \
-                              libbz2-dev
-
-      - name: Install Buildozer
-        run: |
-          pip install cython==0.29.36
-          pip install buildozer
-
-      - name: Build APK
-        run: |
-          buildozer android debug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v3  # Sudah diperbarui sebelumnya
-        with:
-          name: fitnessfoodapp-debug.apk
-          path: bin/*.apk
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+    - name: Publish APK
+      uses: alsrb968/action-release-apk@master
+      env:
+        GITHUB_TOKEN: ${{ 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 }}
+        APP_FOLDER: fitness-food-app-part1
