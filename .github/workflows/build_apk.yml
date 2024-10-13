@@ -1,4 +1,4 @@
-name: Fitness Food APK
+name: Build APK
 
 on:
   push:
@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Perbarui ke v3
 
       - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4  # Perbarui ke v4
         with:
           python-version: 3.9
 
@@ -32,12 +32,12 @@ jobs:
           pip install cython==0.29.36
           pip install buildozer
 
-      - name: Fitness Food APK
+      - name: Build APK
         run: |
           buildozer android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3  # Sudah diperbarui sebelumnya
         with:
           name: fitnessfoodapp-debug.apk
           path: bin/*.apk
