@@ -1,0 +1,43 @@
+name: FITNESS FOOD APK
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip build-essential git zlib1g-dev \
+                              libncurses5-dev libgdbm-dev libnss3-dev \
+                              libssl-dev libreadline-dev libffi-dev libsqlite3-dev \
+                              libbz2-dev
+
+      - name: Install Buildozer
+        run: |
+          pip install cython==0.29.36
+          pip install buildozer
+
+      - name: Build APK
+        run: |
+          buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: fitnessfoodapp-debug.apk
+          path: bin/*.apk
